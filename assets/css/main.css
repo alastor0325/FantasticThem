@@ -2765,6 +2765,13 @@
 				min-width: 12em;
 			}
 
+
+/* p1_9833 */
+	#p1_9833 .main-article p {
+		font-size: small;
+		text-align: justify;
+	}
+
 /* Footer */
 
 	#footer {
