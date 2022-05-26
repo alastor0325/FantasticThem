@@ -2,7 +2,7 @@
 title: FANTASTIC THEM
 email: alastor0325@gmail.com
 description: The story between Mr.Bear and Miss.Squirrel.
-baseurl: "/FantasticThem" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 
 # Social settings
