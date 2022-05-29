@@ -3345,6 +3345,10 @@ button:disabled,
   border-radius: 10px;
 }
 
+.gallery_scroller video {
+  border-radius: 10px;
+}
+
 .gallery_scroller div.colored_card {
   min-width: 75%;
   min-height: 95%;
