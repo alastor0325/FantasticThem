@@ -113,9 +113,9 @@ button,
 
 #header {
   -ms-behavior: url("assets/js/ie/backgroundsize.min.htc");
-  background-image: url("../../assets/images/main_background.jpg");
+  background-image: url("../../assets/images/main_background_v2.jpg");
   background-size: cover;
-  height: 100%;
+  height: 50%;
 }
 
 #header:after {
@@ -136,7 +136,7 @@ button,
 
 #footer {
   -ms-behavior: url("assets/js/ie/backgroundsize.min.htc");
-  background-image: url("../../assets/images/main_background.jpg");
+  background-image: url("../../assets/images/main_background_v2.jpg");
   background-size: cover;
 }
 
