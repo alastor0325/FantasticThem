@@ -25,11 +25,25 @@
 <script src="{{ '/assets/js/main.js' | absolute_url }}"></script>
 
 <script>
-	for (let control of document.querySelectorAll("#vid-control")) {
-		control.onclick = () => {
-			const vid = control.firstChild;
-			vid.muted = !vid.muted;
-			vid.volume = 0.2;
+var autoMutedObserver = new IntersectionObserver(entries => {
+	entries.forEach(entry => {
+		// Mute when video becomes invisible.
+		if (!entry.isIntersecting) {
+			const vid = entry.target.firstChild;
+			vid.muted = true;
+			console.log(`mute vid ${vid.src}`);
 		}
+	});
+}, { threshold: 0 });
+
+for (let control of document.querySelectorAll("#vid-control")) {
+	control.onclick = () => {
+		const vid = control.firstChild;
+		vid.muted = !vid.muted;
+		vid.volume = 0.2;
 	}
+	autoMutedObserver.observe(control);
+}
+
+
 </script>
