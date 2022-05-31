@@ -28,8 +28,8 @@
 var autoMutedObserver = new IntersectionObserver(entries => {
 	entries.forEach(entry => {
 		// Mute when video becomes invisible.
-		if (!entry.isIntersecting) {
-			const vid = entry.target.firstChild;
+		const vid = entry.target.firstChild;
+		if (!entry.isIntersecting && !vid.muted) {
 			vid.muted = true;
 			console.log(`mute vid ${vid.src}`);
 		}
@@ -45,5 +45,29 @@ for (let control of document.querySelectorAll("#vid-control")) {
 	autoMutedObserver.observe(control);
 }
 
+var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy"));
+if ("IntersectionObserver" in window) {
+	var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
+		entries.forEach(function(video) {
+			if (video.isIntersecting) {
+				for (var source in video.target.children) {
+				var videoSource = video.target.children[source];
+					if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
+						videoSource.src = videoSource.dataset.src;
+						console.log(`lazy load src ${videoSource.src}`);
+						break;
+					}
+				}
+				video.target.load();
+				video.target.classList.remove("lazy");
+				lazyVideoObserver.unobserve(video.target);
+			}
+		});
+	});
+
+	lazyVideos.forEach(function(lazyVideo) {
+		lazyVideoObserver.observe(lazyVideo);
+	});
+}
 
 </script>
