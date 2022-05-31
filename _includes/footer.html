@@ -26,7 +26,8 @@
 
 <script>
 
-var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy"));
+
+
 if ("IntersectionObserver" in window) {
 	var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
 		entries.forEach(function(video) {
@@ -56,6 +57,7 @@ if ("IntersectionObserver" in window) {
 		});
 	});
 
+	let lazyVideos = [].slice.call(document.querySelectorAll("video.lazy"));
 	lazyVideos.forEach(lazyVideo => {
 		lazyVideoObserver.observe(lazyVideo);
 		autoMutedObserver.observe(lazyVideo);
@@ -65,6 +67,25 @@ if ("IntersectionObserver" in window) {
 		}
 	});
 
+	let chapters = [].slice.call(document.querySelectorAll(".main.special"));
+	// Loading lazy images.
+	chapters.forEach(chapter => {
+		let imageLoadObserver = new IntersectionObserver(entries => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const chapterId = entry.target.id;
+					const imgs = [].slice.call(document.querySelectorAll(`img.${chapterId}`));
+					// Force to load all images in this chapter.
+					for (let img of imgs) {
+						img.loading = "eager";
+					}
+					imageLoadObserver.unobserve(entry.target);
+					return;
+				}
+			});
+		});
+		imageLoadObserver.observe(chapter);
+	});
 }
 
 </script>
