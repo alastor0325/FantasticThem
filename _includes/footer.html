@@ -25,25 +25,6 @@
 <script src="{{ '/assets/js/main.js' | absolute_url }}"></script>
 
 <script>
-var autoMutedObserver = new IntersectionObserver(entries => {
-	entries.forEach(entry => {
-		// Mute when video becomes invisible.
-		const vid = entry.target.firstChild;
-		if (!entry.isIntersecting && !vid.muted) {
-			vid.muted = true;
-			console.log(`mute vid ${vid.src}`);
-		}
-	});
-}, { threshold: 0 });
-
-for (let control of document.querySelectorAll("#vid-control")) {
-	control.onclick = () => {
-		const vid = control.firstChild;
-		vid.muted = !vid.muted;
-		vid.volume = 0.2;
-	}
-	autoMutedObserver.observe(control);
-}
 
 var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy"));
 if ("IntersectionObserver" in window) {
@@ -65,9 +46,25 @@ if ("IntersectionObserver" in window) {
 		});
 	});
 
-	lazyVideos.forEach(function(lazyVideo) {
-		lazyVideoObserver.observe(lazyVideo);
+	var autoMutedObserver = new IntersectionObserver(entries => {
+		entries.forEach(entry => {
+			// Mute when video becomes invisible.
+			const vid = entry.target;
+			if (!entry.isIntersecting && !vid.muted) {
+				vid.muted = true;
+			}
+		});
 	});
+
+	lazyVideos.forEach(lazyVideo => {
+		lazyVideoObserver.observe(lazyVideo);
+		autoMutedObserver.observe(lazyVideo);
+		lazyVideo.onclick = () => {
+			lazyVideo.muted = !lazyVideo.muted;
+			lazyVideo.volume = 0.2;
+		}
+	});
+
 }
 
 </script>
