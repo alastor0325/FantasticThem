@@ -25,29 +25,8 @@
 <script src="{{ '/assets/js/main.js' | absolute_url }}"></script>
 
 <script>
-
-
-
 if ("IntersectionObserver" in window) {
-	var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
-		entries.forEach(function(video) {
-			if (video.isIntersecting) {
-				for (var source in video.target.children) {
-				var videoSource = video.target.children[source];
-					if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
-						videoSource.src = videoSource.dataset.src;
-						console.log(`lazy load src ${videoSource.src}`);
-						break;
-					}
-				}
-				video.target.load();
-				video.target.classList.remove("lazy");
-				lazyVideoObserver.unobserve(video.target);
-			}
-		});
-	});
-
-	var autoMutedObserver = new IntersectionObserver(entries => {
+	let autoMutedObserver = new IntersectionObserver(entries => {
 		entries.forEach(entry => {
 			// Mute when video becomes invisible.
 			const vid = entry.target;
@@ -57,13 +36,12 @@ if ("IntersectionObserver" in window) {
 		});
 	});
 
-	let lazyVideos = [].slice.call(document.querySelectorAll("video.lazy"));
-	lazyVideos.forEach(lazyVideo => {
-		lazyVideoObserver.observe(lazyVideo);
-		autoMutedObserver.observe(lazyVideo);
-		lazyVideo.onclick = () => {
-			lazyVideo.muted = !lazyVideo.muted;
-			lazyVideo.volume = 0.2;
+	let allVideos = [].slice.call(document.querySelectorAll("video"));
+	allVideos.forEach(video => {
+		autoMutedObserver.observe(video);
+		video.onclick = () => {
+			video.muted = !video.muted;
+			video.volume = 0.2;
 		}
 	});
 
@@ -75,9 +53,21 @@ if ("IntersectionObserver" in window) {
 				if (entry.isIntersecting) {
 					const chapterId = entry.target.id;
 					const imgs = [].slice.call(document.querySelectorAll(`img.${chapterId}`));
-					// Force to load all images in this chapter.
+					const videos = [].slice.call(document.querySelectorAll(`video.${chapterId}`));
+					// Force to load all images/videos in this chapter.
 					for (let img of imgs) {
 						img.loading = "eager";
+					}
+					for (let video of videos) {
+						for (let source in video.children) {
+							let videoSource = video.children[source];
+							if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
+								videoSource.src = videoSource.dataset.src;
+								console.log(`lazy load src ${videoSource.src}`);
+								break;
+							}
+						}
+						video.load();
 					}
 					imageLoadObserver.unobserve(entry.target);
 					return;
