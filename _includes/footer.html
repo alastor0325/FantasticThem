@@ -26,19 +26,21 @@
 
 <script>
 if ("IntersectionObserver" in window) {
-	let autoMutedObserver = new IntersectionObserver(entries => {
+	let videoObserver = new IntersectionObserver(entries => {
 		entries.forEach(entry => {
-			// Mute when video becomes invisible.
 			const vid = entry.target;
-			if (!entry.isIntersecting && !vid.muted) {
+			if (!entry.isIntersecting) {
+				vid.pause();
+			} else {
 				vid.muted = true;
+				vid.play();
 			}
 		});
 	});
 
 	let allVideos = [].slice.call(document.querySelectorAll("video"));
 	allVideos.forEach(video => {
-		autoMutedObserver.observe(video);
+		videoObserver.observe(video);
 		video.onclick = () => {
 			video.muted = !video.muted;
 			video.volume = 0.2;
